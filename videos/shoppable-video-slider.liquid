@@ -18,6 +18,34 @@
     },
     {
       "type": "header",
+      "content": "Social Interaction Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_count",
+      "label": "Show View Count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_like_button",
+      "label": "Show Like Button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_like_count",
+      "label": "Show Like Count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share_button",
+      "label": "Show Share Button",
+      "default": true
+    },
+    {
+      "type": "header",
       "content": "Navigation Controls"
     },
     {
@@ -99,6 +127,12 @@
           "id": "view_count",
           "label": "Total Views",
           "default": "12.4K Views"
+        },
+        {
+          "type": "text",
+          "id": "like_count",
+          "label": "Total Likes",
+          "default": "1.2K"
         }
       ]
     }
@@ -127,9 +161,35 @@
             </video>
             <div class="hover-overlay">
               <div class="hover-icons">
-                <span class="view-count"><i class="fa fa-eye"></i> {{ block.settings.view_count }}</span>
-                <span class="like-icon"><i class="fa fa-heart"></i></span>
-                <span class="share-icon"><i class="fa fa-share-alt"></i></span>
+                {% if section.settings.show_view_count %}
+                  <span class="view-count" data-views="{{ block.settings.view_count }}"><i class="fa fa-eye"></i> {{ block.settings.view_count }}</span>
+                {% endif %}
+                {% if section.settings.show_like_button %}
+                  <span class="like-icon" data-likes="{{ block.settings.like_count }}" data-video-id="{{ forloop.index }}">
+                    <i class="fa fa-heart"></i>
+                    {% if section.settings.show_like_count %}
+                      <span class="like-count">{{ block.settings.like_count }}</span>
+                    {% endif %}
+                  </span>
+                {% endif %}
+                {% if section.settings.show_share_button %}
+                  <span class="share-icon" data-video-url="{{ block.settings.video_url }}"><i class="fa fa-share-alt"></i>
+                    <div class="share-popup">
+                      <div class="share-popup-item facebook">
+                        <i class="fab fa-facebook"></i> Facebook
+                      </div>
+                      <div class="share-popup-item twitter">
+                        <i class="fab fa-twitter"></i> Twitter
+                      </div>
+                      <div class="share-popup-item whatsapp">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                      </div>
+                      <div class="share-popup-item copy">
+                        <i class="fa fa-link"></i> Copy Link
+                      </div>
+                    </div>
+                  </span>
+                {% endif %}
               </div>
             </div>
             <div class="video-overlay">
@@ -165,9 +225,35 @@
           </video>
           <div class="modal-video-overlay">
             <div class="modal-hover-icons">
-              <span class="modal-view-count"><i class="fa fa-eye"></i> <span class="left-view-count"></span></span>
-              <span class="modal-like-icon"><i class="fa fa-heart"></i></span>
-              <span class="modal-share-icon"><i class="fa fa-share-alt"></i></span>
+              {% if section.settings.show_view_count %}
+                <span class="modal-view-count"><i class="fa fa-eye"></i> <span class="left-view-count"></span></span>
+              {% endif %}
+              {% if section.settings.show_like_button %}
+                <span class="modal-like-icon" data-video-position="left">
+                  <i class="fa fa-heart"></i>
+                  {% if section.settings.show_like_count %}
+                    <span class="left-like-count"></span>
+                  {% endif %}
+                </span>
+              {% endif %}
+              {% if section.settings.show_share_button %}
+                <span class="modal-share-icon" data-video-position="left"><i class="fa fa-share-alt"></i>
+                  <div class="modal-share-popup">
+                    <div class="share-popup-item facebook">
+                      <i class="fab fa-facebook"></i> Facebook
+                    </div>
+                    <div class="share-popup-item twitter">
+                      <i class="fab fa-twitter"></i> Twitter
+                    </div>
+                    <div class="share-popup-item whatsapp">
+                      <i class="fab fa-whatsapp"></i> WhatsApp
+                    </div>
+                    <div class="share-popup-item copy">
+                      <i class="fa fa-link"></i> Copy Link
+                    </div>
+                  </div>
+                </span>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -179,9 +265,35 @@
           </video>
           <div class="modal-video-overlay">
             <div class="modal-hover-icons">
-              <span class="modal-view-count"><i class="fa fa-eye"></i> <span class="center-view-count"></span></span>
-              <span class="modal-like-icon"><i class="fa fa-heart"></i></span>
-              <span class="modal-share-icon"><i class="fa fa-share-alt"></i></span>
+              {% if section.settings.show_view_count %}
+                <span class="modal-view-count"><i class="fa fa-eye"></i> <span class="center-view-count"></span></span>
+              {% endif %}
+              {% if section.settings.show_like_button %}
+                <span class="modal-like-icon" data-video-position="center">
+                  <i class="fa fa-heart"></i>
+                  {% if section.settings.show_like_count %}
+                    <span class="center-like-count"></span>
+                  {% endif %}
+                </span>
+              {% endif %}
+              {% if section.settings.show_share_button %}
+                <span class="modal-share-icon" data-video-position="center"><i class="fa fa-share-alt"></i>
+                  <div class="modal-share-popup">
+                    <div class="share-popup-item facebook">
+                      <i class="fab fa-facebook"></i> Facebook
+                    </div>
+                    <div class="share-popup-item twitter">
+                      <i class="fab fa-twitter"></i> Twitter
+                    </div>
+                    <div class="share-popup-item whatsapp">
+                      <i class="fab fa-whatsapp"></i> WhatsApp
+                    </div>
+                    <div class="share-popup-item copy">
+                      <i class="fa fa-link"></i> Copy Link
+                    </div>
+                  </div>
+                </span>
+              {% endif %}
             </div>
             <a href="#" class="modal-shop-button" id="modalShopButton">Shop Now</a>
           </div>
@@ -194,9 +306,35 @@
           </video>
           <div class="modal-video-overlay">
             <div class="modal-hover-icons">
-              <span class="modal-view-count"><i class="fa fa-eye"></i> <span class="right-view-count"></span></span>
-              <span class="modal-like-icon"><i class="fa fa-heart"></i></span>
-              <span class="modal-share-icon"><i class="fa fa-share-alt"></i></span>
+              {% if section.settings.show_view_count %}
+                <span class="modal-view-count"><i class="fa fa-eye"></i> <span class="right-view-count"></span></span>
+              {% endif %}
+              {% if section.settings.show_like_button %}
+                <span class="modal-like-icon" data-video-position="right">
+                  <i class="fa fa-heart"></i>
+                  {% if section.settings.show_like_count %}
+                    <span class="right-like-count"></span>
+                  {% endif %}
+                </span>
+              {% endif %}
+              {% if section.settings.show_share_button %}
+                <span class="modal-share-icon" data-video-position="right"><i class="fa fa-share-alt"></i>
+                  <div class="modal-share-popup">
+                    <div class="share-popup-item facebook">
+                      <i class="fab fa-facebook"></i> Facebook
+                    </div>
+                    <div class="share-popup-item twitter">
+                      <i class="fab fa-twitter"></i> Twitter
+                    </div>
+                    <div class="share-popup-item whatsapp">
+                      <i class="fab fa-whatsapp"></i> WhatsApp
+                    </div>
+                    <div class="share-popup-item copy">
+                      <i class="fa fa-link"></i> Copy Link
+                    </div>
+                  </div>
+                </span>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -318,6 +456,69 @@
 .like-icon:hover, .share-icon:hover {
   background: rgba(0,0,0,0.8);
   transform: scale(1.1);
+}
+
+.like-icon.liked {
+  background: rgba(255,0,0,0.6);
+}
+
+.like-icon.liked i {
+  color: #ff3b5c;
+}
+
+/* Share popup styles */
+.share-popup {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  display: none;
+  z-index: 100;
+  width: 200px;
+}
+
+.share-popup.active {
+  display: block;
+}
+
+.share-popup-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+  color: #333;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.share-popup-item:hover {
+  background: #f5f5f5;
+}
+
+.share-popup-item i {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.share-popup-item.facebook i {
+  color: #1877f2;
+}
+
+.share-popup-item.twitter i {
+  color: #1da1f2;
+}
+
+.share-popup-item.whatsapp i {
+  color: #25d366;
+}
+
+.share-popup-item.copy i {
+  color: #333;
 }
 .swiper-slide {
   width: 260px !important;
@@ -467,11 +668,38 @@
   gap: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .modal-like-icon:hover, .modal-share-icon:hover {
   background: rgba(0,0,0,0.8);
   transform: scale(1.1);
+}
+
+.modal-like-icon.liked {
+  background: rgba(255,0,0,0.6);
+}
+
+.modal-like-icon.liked i {
+  color: #ff3b5c;
+}
+
+/* Modal share popup */
+.modal-share-popup {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  display: none;
+  z-index: 100;
+  width: 200px;
+}
+
+.modal-share-popup.active {
+  display: block;
 }
 
 .modal-shop-button {
@@ -613,19 +841,29 @@
     let allViewCounts = [];
     let allProductUrls = [];
     let allButtonTexts = [];
+    let allLikeCounts = [];
+    let likedVideos = JSON.parse(localStorage.getItem('likedVideos') || '{}');
     let currentVideoIndex = 0;
     
     // Collect all videos and data
     document.querySelectorAll('.video-card').forEach((card, index) => {
       const videoSrc = card.getAttribute('data-video');
-      const viewCount = card.querySelector('.view-count i').nextSibling.textContent.trim();
+      const viewCount = card.querySelector('.view-count')?.textContent.replace(/^\s*\S+\s*/, '').trim() || '0';
       const productLink = card.querySelector('.product-title').getAttribute('href');
       const buttonText = card.querySelector('.shop-button').textContent.trim();
+      const likeCount = card.querySelector('.like-icon')?.getAttribute('data-likes') || '0';
       
       allVideos.push(videoSrc);
       allViewCounts.push(viewCount);
       allProductUrls.push(productLink);
       allButtonTexts.push(buttonText);
+      allLikeCounts.push(likeCount);
+      
+      // Set liked state if this video was previously liked
+      if (likedVideos[videoSrc]) {
+        const likeIcon = card.querySelector('.like-icon');
+        if (likeIcon) likeIcon.classList.add('liked');
+      }
       
       // Add click event to open modal
       card.addEventListener('click', function() {
@@ -659,6 +897,24 @@
       rightVideo.load();
       rightVideo.play();
       rightViewCount.textContent = allViewCounts[rightIndex];
+      
+      // Update like counts and liked state in modal
+      const leftLikeCount = document.querySelector('.left-like-count');
+      const centerLikeCount = document.querySelector('.center-like-count');
+      const rightLikeCount = document.querySelector('.right-like-count');
+      
+      if (leftLikeCount) leftLikeCount.textContent = allLikeCounts[leftIndex];
+      if (centerLikeCount) centerLikeCount.textContent = allLikeCounts[index];
+      if (rightLikeCount) rightLikeCount.textContent = allLikeCounts[rightIndex];
+      
+      // Update liked state
+      const leftLikeIcon = document.querySelector('.modal-like-icon[data-video-position="left"]');
+      const centerLikeIcon = document.querySelector('.modal-like-icon[data-video-position="center"]');
+      const rightLikeIcon = document.querySelector('.modal-like-icon[data-video-position="right"]');
+      
+      if (leftLikeIcon) leftLikeIcon.classList.toggle('liked', likedVideos[allVideos[leftIndex]]);
+      if (centerLikeIcon) centerLikeIcon.classList.toggle('liked', likedVideos[allVideos[index]]);
+      if (rightLikeIcon) rightLikeIcon.classList.toggle('liked', likedVideos[allVideos[rightIndex]]);
       
       // Show modal
       modal.classList.remove('hidden');
@@ -702,12 +958,143 @@
       e.stopPropagation();
     });
     
-    // Add hover effects for like and share icons
-    document.querySelectorAll('.modal-like-icon, .modal-share-icon').forEach(icon => {
+    // Handle like button clicks in the carousel
+    document.querySelectorAll('.like-icon').forEach((icon, index) => {
       icon.addEventListener('click', function(e) {
         e.stopPropagation();
-        // Here you can add like/share functionality
-        this.classList.toggle('active');
+        const videoSrc = allVideos[index];
+        
+        // Toggle liked state
+        this.classList.toggle('liked');
+        likedVideos[videoSrc] = !likedVideos[videoSrc];
+        
+        // Save liked state to localStorage
+        localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
+        
+        // Update like count (this would normally be an API call to update the backend)
+        // For demo purposes, we'll just toggle the visual state
+      });
+    });
+    
+    // Handle share button clicks in the carousel
+    document.querySelectorAll('.share-icon').forEach((icon, index) => {
+      icon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        
+        // Close all other share popups first
+        document.querySelectorAll('.share-popup.active').forEach(popup => {
+          if (popup !== this.querySelector('.share-popup')) {
+            popup.classList.remove('active');
+          }
+        });
+        
+        // Toggle this share popup
+        const popup = this.querySelector('.share-popup');
+        popup.classList.toggle('active');
+        
+        // Prevent closing when clicking inside popup
+        popup.addEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+      });
+    });
+    
+    // Handle like button clicks in the modal
+    document.querySelectorAll('.modal-like-icon').forEach(icon => {
+      icon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const position = this.getAttribute('data-video-position');
+        let videoIndex;
+        
+        if (position === 'left') {
+          videoIndex = (currentVideoIndex - 1 + allVideos.length) % allVideos.length;
+        } else if (position === 'center') {
+          videoIndex = currentVideoIndex;
+        } else if (position === 'right') {
+          videoIndex = (currentVideoIndex + 1) % allVideos.length;
+        }
+        
+        const videoSrc = allVideos[videoIndex];
+        
+        // Toggle liked state
+        this.classList.toggle('liked');
+        likedVideos[videoSrc] = !likedVideos[videoSrc];
+        
+        // Update the like state in the main carousel too
+        document.querySelectorAll('.video-card').forEach((card, idx) => {
+          if (idx === videoIndex) {
+            const likeIcon = card.querySelector('.like-icon');
+            if (likeIcon) likeIcon.classList.toggle('liked', likedVideos[videoSrc]);
+          }
+        });
+        
+        // Save liked state to localStorage
+        localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
+      });
+    });
+    
+    // Handle share button clicks in the modal
+    document.querySelectorAll('.modal-share-icon').forEach(icon => {
+      icon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        
+        // Close all other share popups first
+        document.querySelectorAll('.modal-share-popup.active').forEach(popup => {
+          if (popup !== this.querySelector('.modal-share-popup')) {
+            popup.classList.remove('active');
+          }
+        });
+        
+        // Toggle this share popup
+        const popup = this.querySelector('.modal-share-popup');
+        popup.classList.toggle('active');
+        
+        // Prevent closing when clicking inside popup
+        popup.addEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+      });
+    });
+    
+    // Handle share popup item clicks
+    document.querySelectorAll('.share-popup-item, .modal-share-popup .share-popup-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const platform = this.classList[1]; // facebook, twitter, whatsapp, copy
+        const videoUrl = this.closest('.share-icon, .modal-share-icon').getAttribute('data-video-url') || 
+                         allVideos[currentVideoIndex];
+        let shareUrl = '';
+        
+        // Create share URLs for different platforms
+        switch(platform) {
+          case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(videoUrl)}`;
+            window.open(shareUrl, '_blank');
+            break;
+          case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(videoUrl)}`;
+            window.open(shareUrl, '_blank');
+            break;
+          case 'whatsapp':
+            shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(videoUrl)}`;
+            window.open(shareUrl, '_blank');
+            break;
+          case 'copy':
+            navigator.clipboard.writeText(videoUrl).then(() => {
+              alert('Video link copied to clipboard!');
+            });
+            break;
+        }
+        
+        // Close the popup after action
+        this.closest('.share-popup, .modal-share-popup').classList.remove('active');
+      });
+    });
+    
+    // Close share popups when clicking outside
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.share-popup.active, .modal-share-popup.active').forEach(popup => {
+        popup.classList.remove('active');
       });
     });
   });
