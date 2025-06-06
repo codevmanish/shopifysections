@@ -163,20 +163,45 @@
           <video class="modal-video" muted loop>
             <source src="" type="video/mp4">
           </video>
+          <div class="modal-video-overlay">
+            <div class="modal-hover-icons">
+              <span class="modal-view-count"><i class="fa fa-eye"></i> <span class="left-view-count"></span></span>
+              <span class="modal-like-icon"><i class="fa fa-heart"></i></span>
+              <span class="modal-share-icon"><i class="fa fa-share-alt"></i></span>
+            </div>
+          </div>
         </div>
+        
         <!-- Center video (main) -->
         <div class="modal-carousel-item center-item">
           <video id="modalVideo" class="modal-video" controls autoplay>
             <source src="" type="video/mp4">
           </video>
+          <div class="modal-video-overlay">
+            <div class="modal-hover-icons">
+              <span class="modal-view-count"><i class="fa fa-eye"></i> <span class="center-view-count"></span></span>
+              <span class="modal-like-icon"><i class="fa fa-heart"></i></span>
+              <span class="modal-share-icon"><i class="fa fa-share-alt"></i></span>
+            </div>
+            <a href="#" class="modal-shop-button" id="modalShopButton">Shop Now</a>
+          </div>
         </div>
+        
         <!-- Right video (3D effect) -->
         <div class="modal-carousel-item right-item">
           <video class="modal-video" muted loop>
             <source src="" type="video/mp4">
           </video>
+          <div class="modal-video-overlay">
+            <div class="modal-hover-icons">
+              <span class="modal-view-count"><i class="fa fa-eye"></i> <span class="right-view-count"></span></span>
+              <span class="modal-like-icon"><i class="fa fa-heart"></i></span>
+              <span class="modal-share-icon"><i class="fa fa-share-alt"></i></span>
+            </div>
+          </div>
         </div>
       </div>
+      
       <!-- Navigation arrows for modal carousel -->
       <div class="modal-nav prev-modal">‹</div>
       <div class="modal-nav next-modal">›</div>
@@ -352,10 +377,11 @@
   top: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,0.95);
+  background-color: rgba(0,0,0,0.85); /* Reduced opacity */
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(5px); /* Add subtle blur effect */
 }
 .video-modal.hidden {
   display: none;
@@ -400,6 +426,73 @@
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Modal video overlay styles */
+.modal-video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+  pointer-events: none;
+}
+
+.modal-hover-icons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  align-self: flex-end;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal-carousel-item:hover .modal-hover-icons {
+  opacity: 1;
+}
+
+.modal-view-count, .modal-like-icon, .modal-share-icon {
+  color: white;
+  font-size: 14px;
+  background: rgba(0,0,0,0.6);
+  padding: 6px 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-like-icon:hover, .modal-share-icon:hover {
+  background: rgba(0,0,0,0.8);
+  transform: scale(1.1);
+}
+
+.modal-shop-button {
+  align-self: center;
+  margin-bottom: 20px;
+  background: white;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: 600;
+  pointer-events: auto;
+  transition: all 0.2s ease;
+  text-align: center;
+  display: inline-block;
+}
+
+.modal-shop-button:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
 }
 
 .modal-video {
@@ -464,10 +557,24 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  font-size: 40px;
+  width: 36px;
+  height: 36px;
+  font-size: 30px;
   color: white;
   cursor: pointer;
-  z-index: 20;
+  z-index: 30;
+  background: rgba(0,0,0,0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0.8;
+  transition: all 0.2s ease;
+}
+
+.video-modal-close:hover {
+  background: rgba(0,0,0,0.9);
+  transform: scale(1.1);
 }
 </style>
 
@@ -496,15 +603,29 @@
     const nextModalBtn = document.querySelector('.next-modal');
     const leftVideo = document.querySelector('.left-item video');
     const rightVideo = document.querySelector('.right-item video');
+    const modalShopButton = document.getElementById('modalShopButton');
+    const leftViewCount = document.querySelector('.left-view-count');
+    const centerViewCount = document.querySelector('.center-view-count');
+    const rightViewCount = document.querySelector('.right-view-count');
     
-    // Store all videos for 3D carousel
+    // Store all videos and data for 3D carousel
     let allVideos = [];
+    let allViewCounts = [];
+    let allProductUrls = [];
+    let allButtonTexts = [];
     let currentVideoIndex = 0;
     
-    // Collect all videos
+    // Collect all videos and data
     document.querySelectorAll('.video-card').forEach((card, index) => {
       const videoSrc = card.getAttribute('data-video');
+      const viewCount = card.querySelector('.view-count i').nextSibling.textContent.trim();
+      const productLink = card.querySelector('.product-title').getAttribute('href');
+      const buttonText = card.querySelector('.shop-button').textContent.trim();
+      
       allVideos.push(videoSrc);
+      allViewCounts.push(viewCount);
+      allProductUrls.push(productLink);
+      allButtonTexts.push(buttonText);
       
       // Add click event to open modal
       card.addEventListener('click', function() {
@@ -519,37 +640,47 @@
       modalVideo.querySelector('source').src = allVideos[index];
       modalVideo.load();
       modalVideo.play();
+      centerViewCount.textContent = allViewCounts[index];
+      
+      // Set shop button
+      modalShopButton.textContent = allButtonTexts[index];
+      modalShopButton.href = allProductUrls[index];
       
       // Set left video
       const leftIndex = (index - 1 + allVideos.length) % allVideos.length;
       leftVideo.querySelector('source').src = allVideos[leftIndex];
       leftVideo.load();
       leftVideo.play();
+      leftViewCount.textContent = allViewCounts[leftIndex];
       
       // Set right video
       const rightIndex = (index + 1) % allVideos.length;
       rightVideo.querySelector('source').src = allVideos[rightIndex];
       rightVideo.load();
       rightVideo.play();
+      rightViewCount.textContent = allViewCounts[rightIndex];
       
       // Show modal
       modal.classList.remove('hidden');
     }
     
     // Navigate to previous video
-    prevModalBtn.addEventListener('click', function() {
+    prevModalBtn.addEventListener('click', function(e) {
+      e.stopPropagation(); // Prevent event bubbling
       currentVideoIndex = (currentVideoIndex - 1 + allVideos.length) % allVideos.length;
       openModalWithVideos(currentVideoIndex);
     });
     
     // Navigate to next video
-    nextModalBtn.addEventListener('click', function() {
+    nextModalBtn.addEventListener('click', function(e) {
+      e.stopPropagation(); // Prevent event bubbling
       currentVideoIndex = (currentVideoIndex + 1) % allVideos.length;
       openModalWithVideos(currentVideoIndex);
     });
     
     // Close modal
-    closeBtn.addEventListener('click', function() {
+    closeBtn.addEventListener('click', function(e) {
+      e.stopPropagation(); // Prevent event bubbling
       modalVideo.pause();
       leftVideo.pause();
       rightVideo.pause();
@@ -566,9 +697,18 @@
       }
     });
     
-    // Add hover effects to show view count and icons
-    document.querySelectorAll('.video-card').forEach(card => {
-      // Hover events will be handled by CSS
+    // Prevent modal closing when clicking on modal content
+    document.querySelector('.modal-carousel-container').addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+    
+    // Add hover effects for like and share icons
+    document.querySelectorAll('.modal-like-icon, .modal-share-icon').forEach(icon => {
+      icon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        // Here you can add like/share functionality
+        this.classList.toggle('active');
+      });
     });
   });
 </script>
