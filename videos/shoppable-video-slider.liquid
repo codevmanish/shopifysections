@@ -1,0 +1,356 @@
+{% schema %}
+{
+  "name": "Mx Video Carousel",
+  "tag": "section",
+  "class": "shopify-section--video-carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Watch & Shop"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Enable Full Width",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Navigation Controls"
+    },
+    {
+      "type": "color",
+      "id": "nav_bg_color",
+      "label": "Navigation Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "nav_bg_opacity",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Navigation Background Opacity",
+      "default": 70
+    },
+    {
+      "type": "color",
+      "id": "nav_icon_color",
+      "label": "Navigation Icon Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "nav_icon_opacity",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Navigation Icon Opacity",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "nav_size",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Navigation Button Size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "min": 8,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Arrow Size",
+      "default": 10
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video Block",
+      "settings": [
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Video URL (MP4 or hosted)"
+        },
+        {
+          "type": "product",
+          "id": "product_link",
+          "label": "Linked Product"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "text",
+          "id": "view_count",
+          "label": "Total Views",
+          "default": "12.4K Views"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mx Video Carousel",
+      "category": "Media"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="video-carousel-wrapper {% if section.settings.full_width %}full-width{% else %}page-width{% endif %}">
+  {% if section.settings.title != blank %}
+    <h2 class="carousel-title">{{ section.settings.title }}</h2>
+  {% endif %}
+
+  <div class="swiper video-swiper">
+    <div class="swiper-wrapper">
+      {% for block in section.blocks %}
+        <div class="swiper-slide video-block">
+          <div class="video-card" data-video="{{ block.settings.video_url }}">
+            <video muted playsinline loop preload="metadata">
+              <source src="{{ block.settings.video_url }}" type="video/mp4">
+            </video>
+            <div class="video-overlay">
+              <div class="left-info">
+                <a href="{{ block.settings.product_link.url }}" class="product-title">
+                  {{ block.settings.product_link.title }}
+                </a>
+                <a href="{{ block.settings.product_link.url }}" class="shop-button">
+                  {{ block.settings.button_text }}
+                </a>
+              </div>
+              <span class="view-count">{{ block.settings.view_count }}</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="videoModal" class="video-modal hidden">
+  <div class="video-modal-content">
+    <span class="video-modal-close">&times;</span>
+    <video id="modalVideo" controls autoplay>
+      <source src="" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<style>
+.video-carousel-wrapper {
+  padding: 40px 0;
+}
+.page-width {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.full-width {
+  width: 100%;
+  padding: 0 10px;
+}
+.carousel-title {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+.video-block {
+  padding: 10px;
+  box-sizing: border-box;
+}
+.video-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.video-card video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+.video-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 50%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.left-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.product-title {
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+}
+.shop-button {
+  background: white;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  text-decoration: none;
+  font-weight: 500;
+}
+.view-count {
+  color: white;
+  font-size: 12px;
+  background: rgba(0,0,0,0.5);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.swiper-slide {
+  width: 260px !important;
+}
+.swiper-button-prev,
+.swiper-button-next {
+  {% assign nav_bg_opacity = section.settings.nav_bg_opacity | times: 0.01 %}
+  {% assign nav_icon_opacity = section.settings.nav_icon_opacity | times: 0.01 %}
+  {% assign nav_size = section.settings.nav_size | default: 36 %}
+  color: {{ section.settings.nav_icon_color | color_modify: 'alpha', nav_icon_opacity }};
+  background: {{ section.settings.nav_bg_color | color_modify: 'alpha', nav_bg_opacity }};
+  backdrop-filter: blur(4px);
+  
+  width: {{ nav_size }}px;
+  height: {{ nav_size }}px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  top: 45%;
+  z-index: 100 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 15px !important;
+  color:white !important;
+  font-weight: bold;
+  line-height: 1;
+  margin-top: 1px;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  {% assign nav_bg_opacity_hover = section.settings.nav_bg_opacity | plus: 20 | at_most: 100 | times: 0.01 %}
+  {% assign nav_icon_opacity_hover = section.settings.nav_icon_opacity | plus: 20 | at_most: 100 | times: 0.01 %}
+  background: {{ section.settings.nav_bg_color | color_modify: 'alpha', nav_bg_opacity_hover }};
+  color: {{ section.settings.nav_icon_color | color_modify: 'alpha', nav_icon_opacity_hover }};
+  opacity: 1 !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 767px) {
+  .swiper-slide {
+    width: 75% !important;
+  }
+}
+
+/* Modal styles */
+.video-modal {
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-modal.hidden {
+  display: none;
+}
+.video-modal-content {
+  position: relative;
+  max-width: 90%;
+  width: 800px;
+}
+.video-modal-content video {
+  width: 100%;
+  border-radius: 10px;
+}
+.video-modal-close {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+}
+</style>
+
+<!-- Swiper + Modal Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Swiper('.video-swiper', {
+      slidesPerView: 'auto',
+      spaceBetween: 20,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      }
+    });
+
+    const modal = document.getElementById('videoModal');
+    const modalVideo = document.getElementById('modalVideo');
+    const closeBtn = document.querySelector('.video-modal-close');
+
+    document.querySelectorAll('.video-card').forEach(card => {
+      card.addEventListener('click', function () {
+        const videoSrc = this.getAttribute('data-video');
+        modalVideo.querySelector('source').src = videoSrc;
+        modalVideo.load();
+        modal.classList.remove('hidden');
+      });
+    });
+
+    closeBtn.addEventListener('click', function () {
+      modalVideo.pause();
+      modal.classList.add('hidden');
+    });
+
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) {
+        modalVideo.pause();
+        modal.classList.add('hidden');
+      }
+    });
+  });
+</script>
