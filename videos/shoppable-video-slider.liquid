@@ -125,6 +125,13 @@
             <video muted playsinline loop preload="metadata">
               <source src="{{ block.settings.video_url }}" type="video/mp4">
             </video>
+            <div class="hover-overlay">
+              <div class="hover-icons">
+                <span class="view-count"><i class="fa fa-eye"></i> {{ block.settings.view_count }}</span>
+                <span class="like-icon"><i class="fa fa-heart"></i></span>
+                <span class="share-icon"><i class="fa fa-share-alt"></i></span>
+              </div>
+            </div>
             <div class="video-overlay">
               <div class="left-info">
                 <a href="{{ block.settings.product_link.url }}" class="product-title">
@@ -134,7 +141,6 @@
                   {{ block.settings.button_text }}
                 </a>
               </div>
-              <span class="view-count">{{ block.settings.view_count }}</span>
             </div>
           </div>
         </div>
@@ -146,13 +152,35 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal with 3D Carousel -->
 <div id="videoModal" class="video-modal hidden">
   <div class="video-modal-content">
     <span class="video-modal-close">&times;</span>
-    <video id="modalVideo" controls autoplay>
-      <source src="" type="video/mp4">
-    </video>
+    <div class="modal-carousel-container">
+      <div class="modal-carousel">
+        <!-- Left video (3D effect) -->
+        <div class="modal-carousel-item left-item">
+          <video class="modal-video" muted loop>
+            <source src="" type="video/mp4">
+          </video>
+        </div>
+        <!-- Center video (main) -->
+        <div class="modal-carousel-item center-item">
+          <video id="modalVideo" class="modal-video" controls autoplay>
+            <source src="" type="video/mp4">
+          </video>
+        </div>
+        <!-- Right video (3D effect) -->
+        <div class="modal-carousel-item right-item">
+          <video class="modal-video" muted loop>
+            <source src="" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <!-- Navigation arrows for modal carousel -->
+      <div class="modal-nav prev-modal">‹</div>
+      <div class="modal-nav next-modal">›</div>
+    </div>
   </div>
 </div>
 
@@ -221,12 +249,50 @@
   text-decoration: none;
   font-weight: 500;
 }
-.view-count {
+/* Hover overlay styles */
+.hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding: 12px;
+  z-index: 2;
+}
+
+.video-card:hover .hover-overlay {
+  opacity: 1;
+}
+
+.hover-icons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.view-count, .like-icon, .share-icon {
   color: white;
   font-size: 12px;
-  background: rgba(0,0,0,0.5);
-  padding: 4px 8px;
+  background: rgba(0,0,0,0.6);
+  padding: 6px 8px;
   border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.like-icon:hover, .share-icon:hover {
+  background: rgba(0,0,0,0.8);
+  transform: scale(1.1);
 }
 .swiper-slide {
   width: 260px !important;
@@ -278,7 +344,7 @@
   }
 }
 
-/* Modal styles */
+/* Modal styles with 3D carousel */
 .video-modal {
   position: fixed;
   z-index: 9999;
@@ -286,7 +352,7 @@
   top: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,0.85);
+  background-color: rgba(0,0,0,0.95);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -296,29 +362,123 @@
 }
 .video-modal-content {
   position: relative;
-  max-width: 90%;
-  width: 800px;
-}
-.video-modal-content video {
   width: 100%;
-  border-radius: 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+/* 3D Carousel Container */
+.modal-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+}
+
+.modal-carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* Mobile-like dimensions for videos */
+.modal-carousel-item {
+  position: absolute;
+  width: 360px; /* Mobile width */
+  height: 640px; /* Mobile height - 16:9 aspect ratio */
+  transition: all 0.5s ease;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.modal-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+/* Positioning for 3D effect */
+.center-item {
+  z-index: 3;
+  transform: translateZ(0);
+}
+
+.left-item {
+  z-index: 1;
+  transform: translateX(-50%) translateZ(-200px) rotateY(30deg);
+  opacity: 0.7;
+  filter: brightness(0.7);
+}
+
+.right-item {
+  z-index: 1;
+  transform: translateX(50%) translateZ(-200px) rotateY(-30deg);
+  opacity: 0.7;
+  filter: brightness(0.7);
+}
+
+/* Navigation for modal carousel */
+.modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.modal-nav:hover {
+  background: rgba(255,255,255,0.4);
+}
+
+.prev-modal {
+  left: 20px;
+}
+
+.next-modal {
+  right: 20px;
+}
+
 .video-modal-close {
   position: absolute;
-  top: -30px;
-  right: 0;
+  top: 20px;
+  right: 20px;
   font-size: 40px;
   color: white;
   cursor: pointer;
+  z-index: 20;
 }
 </style>
 
 <!-- Swiper + Modal Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    // Initialize main carousel
     new Swiper('.video-swiper', {
       slidesPerView: 'auto',
       spaceBetween: 20,
@@ -328,29 +488,87 @@
       }
     });
 
+    // Modal variables
     const modal = document.getElementById('videoModal');
     const modalVideo = document.getElementById('modalVideo');
     const closeBtn = document.querySelector('.video-modal-close');
-
-    document.querySelectorAll('.video-card').forEach(card => {
-      card.addEventListener('click', function () {
-        const videoSrc = this.getAttribute('data-video');
-        modalVideo.querySelector('source').src = videoSrc;
-        modalVideo.load();
-        modal.classList.remove('hidden');
+    const prevModalBtn = document.querySelector('.prev-modal');
+    const nextModalBtn = document.querySelector('.next-modal');
+    const leftVideo = document.querySelector('.left-item video');
+    const rightVideo = document.querySelector('.right-item video');
+    
+    // Store all videos for 3D carousel
+    let allVideos = [];
+    let currentVideoIndex = 0;
+    
+    // Collect all videos
+    document.querySelectorAll('.video-card').forEach((card, index) => {
+      const videoSrc = card.getAttribute('data-video');
+      allVideos.push(videoSrc);
+      
+      // Add click event to open modal
+      card.addEventListener('click', function() {
+        currentVideoIndex = index;
+        openModalWithVideos(currentVideoIndex);
       });
     });
-
-    closeBtn.addEventListener('click', function () {
+    
+    // Function to open modal with 3D carousel
+    function openModalWithVideos(index) {
+      // Set center video (main)
+      modalVideo.querySelector('source').src = allVideos[index];
+      modalVideo.load();
+      modalVideo.play();
+      
+      // Set left video
+      const leftIndex = (index - 1 + allVideos.length) % allVideos.length;
+      leftVideo.querySelector('source').src = allVideos[leftIndex];
+      leftVideo.load();
+      leftVideo.play();
+      
+      // Set right video
+      const rightIndex = (index + 1) % allVideos.length;
+      rightVideo.querySelector('source').src = allVideos[rightIndex];
+      rightVideo.load();
+      rightVideo.play();
+      
+      // Show modal
+      modal.classList.remove('hidden');
+    }
+    
+    // Navigate to previous video
+    prevModalBtn.addEventListener('click', function() {
+      currentVideoIndex = (currentVideoIndex - 1 + allVideos.length) % allVideos.length;
+      openModalWithVideos(currentVideoIndex);
+    });
+    
+    // Navigate to next video
+    nextModalBtn.addEventListener('click', function() {
+      currentVideoIndex = (currentVideoIndex + 1) % allVideos.length;
+      openModalWithVideos(currentVideoIndex);
+    });
+    
+    // Close modal
+    closeBtn.addEventListener('click', function() {
       modalVideo.pause();
+      leftVideo.pause();
+      rightVideo.pause();
       modal.classList.add('hidden');
     });
-
-    modal.addEventListener('click', function (e) {
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
       if (e.target === modal) {
         modalVideo.pause();
+        leftVideo.pause();
+        rightVideo.pause();
         modal.classList.add('hidden');
       }
+    });
+    
+    // Add hover effects to show view count and icons
+    document.querySelectorAll('.video-card').forEach(card => {
+      // Hover events will be handled by CSS
     });
   });
 </script>
